@@ -1,13 +1,12 @@
 #include <iostream>
 #include <string>
-#include <fstream>
 #include "headers/udata.h"
 #include "headers/splitter.h"
 #include "headers/merger.h"
 
 using namespace std;
 
-bool handleLoginSignup(UserDetails& user) {
+void handleLoginSignup(UserDetails& user) {
     int option;
     string userName, password;
 
@@ -23,23 +22,9 @@ bool handleLoginSignup(UserDetails& user) {
                 cin >> userName;
                 cout << "Enter password: ";
                 cin >> password;
-                ifstream fin("UserData", ios::in | ios::binary);
-                if (!fin) {
-                    cerr << "Error opening file for login." << endl;
-                    return false;
-                }
-                string storedUserName, storedPassword;
-                bool loginSuccessful = false;
-                while (fin >> storedUserName >> storedPassword) {
-                    if (storedUserName == userName && storedPassword == password) {
-                        loginSuccessful = true;
-                        break;
-                    }
-                }
-                fin.close();
-                if (loginSuccessful) {
+                if (user.authenticateUser(userName, password)) {
                     cout << "Login successful!" << endl;
-                    return true;  // Login successful
+                    return;  // Exit function if login successful
                 } else {
                     cout << "Invalid username or password! Please try again." << endl;
                 }
@@ -50,16 +35,10 @@ bool handleLoginSignup(UserDetails& user) {
                 cin >> userName;
                 cout << "Enter password: ";
                 cin >> password;
-                user.input(userName, password);
-                ofstream fout("UserData", ios::out | ios::app | ios::binary);
-                if (!fout) {
-                    cerr << "Error opening file for signup." << endl;
-                    return false;
+                if (user.signup(userName, password)) {
+                    cout << "Signup successful!" << endl;
                 }
-                fout << user.store() << endl;
-                fout.close();
-                cout << "Signup successful!" << endl;
-                return true;  // Signup successful
+                break;
             }
             default:
                 cout << "Invalid choice. Please enter 1 for Login or 2 for Signup." << endl;
@@ -68,7 +47,7 @@ bool handleLoginSignup(UserDetails& user) {
     }
 }
 
-void handleFileOperations(int argc, char** argv) {
+void handleFileOperations() {
     int option;
     cout << "-------------------------------------1.Split-------------------------------------\n";
     cout << "-------------------------------------2.Merge-------------------------------------\n";
@@ -77,7 +56,6 @@ void handleFileOperations(int argc, char** argv) {
 
     switch (option) {
         case 1: {
-            // Get filename and part size for splitting
             string filename;
             int partsSize;
             cout << "Enter the filename to split: ";
@@ -91,23 +69,21 @@ void handleFileOperations(int argc, char** argv) {
             cout << "Enter the size of each part (in bytes): ";
             cin >> partsSize;
 
-             if (partsSize <= 0) {
+            if (partsSize <= 0) {
                 cerr << "Error: Part size must be a positive integer." << endl;
                 return;
             }
-            // Create FileSplitter object with parameters
-            FileSplitter splitter(filename, partsSize);  // Pass parameters directly
+            FileSplitter splitter(filename, partsSize);
             splitter.split();
             break;
         }
         case 2: {
-            // Get filename and number of parts for merging
             string filename;
             int numParts;
             cout << "Enter the base filename for merging: ";
             cin >> filename;
 
-              if (filename.empty()) {
+            if (filename.empty()) {
                 cerr << "Error: Filename cannot be empty." << endl;
                 return;
             }
@@ -115,13 +91,12 @@ void handleFileOperations(int argc, char** argv) {
             cout << "Enter the number of parts to merge: ";
             cin >> numParts;
 
-              if (numParts <= 0) {
+            if (numParts <= 0) {
                 cerr << "Error: Number of parts must be a positive integer." << endl;
                 return;
             }
 
-            // Create FileMerger object with parameters
-            FileMerger merger(filename, numParts);  // Pass parameters directly
+            FileMerger merger(filename, numParts);
             merger.merge();
             break;
         }
@@ -131,12 +106,9 @@ void handleFileOperations(int argc, char** argv) {
     }
 }
 
-
-int main(int argc, char** argv) {
+int main() {
     UserDetails user;
-    bool loginSuccessful = handleLoginSignup(user);
-    if (loginSuccessful) {
-        handleFileOperations(argc, argv);
-    }
+    handleLoginSignup(user);
+    handleFileOperations();
     return 0;
 }

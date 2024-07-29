@@ -9,24 +9,10 @@
 
 using namespace std;
 
-FileSplitter::FileSplitter(int argc, char** argv) {
-    check_arguments(argc, argv);
-    parts_size = get_parts_size(argv[2]);
-    filename = argv[1];
-}
-
-void FileSplitter::check_arguments(int argc, char** argv) {
-    if (argc < 3) {
-        throw invalid_argument("Usage: " + string(argv[0]) + " <filename> <number_of_parts>");
-    }
-}
-
-int FileSplitter::get_parts_size(const char* parts_str) {
-    int parts_size = atoi(parts_str);  // Ensure we include <cstdlib>
-    if (parts_size <= 0) {
-        throw out_of_range("Parts size must be positive.");
-    }
-    return parts_size;
+// Correct constructor definition
+FileSplitter::FileSplitter(const string& filename, int parts_size) 
+    : filename(filename), parts_size(parts_size) {
+    // Constructor body can remain empty or include additional initialization if needed
 }
 
 void FileSplitter::open_file(ifstream& file, const string& filename) {
@@ -94,9 +80,18 @@ void FileSplitter::split() {
     operation_file.close();
 }
 
+void FileSplitter::setFilename(const std::string& filename) {
+    this->filename = filename;
+}
+
+void FileSplitter::setPartsSize(int size) {
+    this->parts_size = size;
+}
+
 int main2(int argc, char** argv) {
     try {
-        FileSplitter splitter(argc, argv);
+        // Directly pass parameters for testing
+        FileSplitter splitter("test.txt", 1024);  // Example parameters
         splitter.split();
     } catch (const invalid_argument& e) {
         cerr << "Invalid argument: " << e.what() << endl;

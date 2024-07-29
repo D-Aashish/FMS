@@ -15,7 +15,7 @@ private:
     int parts_size;
 
 public:
-    FileSplitter(int argc, char** argv);
+    FileSplitter(const string& filename, int parts_size);  // Updated constructor
     void check_arguments(int argc, char** argv);
     int get_parts_size(const char* parts_str);
     void open_file(ifstream& file, const string& filename);
@@ -24,6 +24,10 @@ public:
     void write_part(ofstream& part_file, vector<char>& buffer, int size);
     void split_file(ifstream& operation_file, const string& filename, int parts_size);
     void split();
+
+    // Public setter methods
+    void setFilename(const std::string& filename);
+    void setPartsSize(int size);
 };
 
-#endif // SPLITTER_H
+#endif

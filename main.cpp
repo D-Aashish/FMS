@@ -1,67 +1,100 @@
-#include "headers/splitter.h"
-#include "headers/merger.h"
-#include "headers/udata.h"
-
 #include <iostream>
 #include <string>
 #include <fstream>
+#include "headers/udata.h"  // Ensure you have the correct path
+#include "headers/splitter.h"
+#include "headers/merger.h"
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " [split|merge|login|signup] [args...]" << std::endl;
-        return 1;
-    }
+using namespace std;
 
-    std::string command = argv[1];
+void handleLoginSignup(UserDetails& user) {
+    int option;
+    string userName, password;
 
-    try {
-        if (command == "split" && argc == 4) {
-            FileSplitter splitter(argc, argv);
-            splitter.split();
-        } else if (command == "merge" && argc == 4) {
-            FileMerger merger(argc, argv);
-            merger.merge();
-        } else if (command == "login" && argc == 3) {
-            UserDetails user;
-            ifstream infile("user_data.txt");
-            if (!infile) {
-                cerr << "Error opening user data file." << std::endl;
-                return 1;
+    cout << "-------------------------------------1.Login-------------------------------------\n";
+    cout << "-------------------------------------2.Signup-------------------------------------\n";
+
+    cout << "Enter your choice: ";
+    cin >> option;
+
+    switch (option) {
+        case 1: {
+            cout << "Enter username: ";
+            cin >> userName;
+            cout << "Enter password: ";
+            cin >> password;
+            ifstream fin("UserData", ios::in | ios::binary);
+            if (!fin) {
+                cerr << "Error opening file for login." << endl;
+                return;
             }
-            string stored_user, stored_pass;
-            bool found = false;
-            while (infile >> stored_user >> stored_pass) {
-                if (user.login(stored_user, argv[2])) {
-                    found = true;
+            string storedUserName, storedPassword;
+            bool loginSuccessful = false;
+            while (fin >> storedUserName >> storedPassword) {
+                if (storedUserName == userName && storedPassword == password) {
+                    loginSuccessful = true;
                     break;
                 }
             }
-            infile.close();
-            if (found) {
-                std::cout << "Login successful." << std::endl;
+            fin.close();
+            if (loginSuccessful) {
+                cout << "Login successful!" << endl;
             } else {
-                std::cerr << "Invalid username or password." << std::endl;
-                return 1;
+                cout << "Invalid username or password!" << endl;
             }
-        } else if (command == "signup" && argc == 4) {
-            UserDetails user;
-            user.input(argv[2], argv[3]);
-            ofstream outfile("user_data.txt", std::ios_base::app);
-            if (!outfile) {
-                cerr << "Error opening user data file." << std::endl;
-                return 1;
-            }
-            outfile << user.store() << std::endl;
-            outfile.close();
-            cout << "Signup successful." << std::endl;
-        } else {
-            cerr << "Invalid arguments. Usage: " << argv[0] << " [split|merge|login|signup] [args...]" << std::endl;
-            return 1;
+            break;
         }
-    } catch (const std::exception& e) {
-        cerr << "An error occurred: " << e.what() << std::endl;
-        return 1;
+        case 2: {
+            cout << "Enter username: ";
+            cin >> userName;
+            cout << "Enter password: ";
+            cin >> password;
+            user.input(userName, password);
+            ofstream fout("UserData", ios::out | ios::app | ios::binary);
+            if (!fout) {
+                cerr << "Error opening file for signup." << endl;
+                return;
+            }
+            fout << user.store() << endl;
+            fout.close();
+            cout << "Signup successful!" << endl;
+            break;
+        }
+        default:
+            cout << "Invalid choice. Please enter 1 for Login or 2 for Signup." << endl;
+            break;
     }
+}
 
+void handleFileOperations(int argc, char** argv) {
+    int option;
+    cout << "-------------------------------------1.Split-------------------------------------\n";
+    cout << "-------------------------------------2.Merge-------------------------------------\n";
+    cout << "Enter your choice: ";
+    cin >> option;
+
+    switch (option) {
+        case 1: {
+            // Initialize FileSplitter with argc and argv
+            FileSplitter splitter(argc, argv);
+            splitter.split();
+            break;
+        }
+        case 2: {
+            // Initialize FileMerger with argc and argv
+            FileMerger merger(argc, argv);
+            merger.merge();
+            break;
+        }
+        default:
+            cout << "Invalid choice. Please enter 1 for Split or 2 for Merge." << endl;
+            break;
+    }
+}
+
+int main(int argc, char** argv) {
+    UserDetails user;
+    handleLoginSignup(user);
+    handleFileOperations(argc, argv);
     return 0;
 }

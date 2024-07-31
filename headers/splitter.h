@@ -11,8 +11,8 @@ using namespace std;
 
 class FileSplitter {
 private:
-    string filename;
-    int parts_size;
+    string fileName;
+    int partsSize;
 
 public:
     FileSplitter(const string& filename, int parts_size);  // Updated constructor

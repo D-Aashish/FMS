@@ -9,33 +9,32 @@
 
 using namespace std;
 
-// Correct constructor definition
-FileSplitter::FileSplitter(const string& filename, int parts_size) 
-    : filename(filename), parts_size(parts_size) {
+FileSplitter::FileSplitter(const string& file_name, int size) 
+    : fileName(file_name), partsSize(size) {
     // Constructor body can remain empty or include additional initialization if needed
 }
 
-void FileSplitter::open_file(ifstream& file, const string& filename) {
-    file.open(filename.c_str(), ios::in | ios::binary);  // Use c_str() to convert to C-style string
-    if (!file) {
-        throw runtime_error("Error opening file: " + filename);
+void FileSplitter::open_file(ifstream& file_ptr, const string& file_name) {
+    file_ptr.open(file_name.c_str(), ios::in | ios::binary);  // Use c_str() to convert to C-style string
+    if (!file_ptr) {
+        throw runtime_error("Error opening file: " + file_name);
     }
 }
 
-int FileSplitter::get_file_length(ifstream& file) {
-    file.seekg(0, ios::end);
-    int length = file.tellg();
-    file.seekg(0, ios::beg);
+int FileSplitter::get_file_length(ifstream& file_ptr) {
+    file_ptr.seekg(0, ios::end);
+    int length = file_ptr.tellg();
+    file_ptr.seekg(0, ios::beg);
     if (length == 0) {
         throw runtime_error("The file is empty.");
     }
     return length;
 }
 
-void FileSplitter::create_part_file(ofstream& part_file, const string& partname) {
-    part_file.open(partname.c_str(), ios::out | ios::binary);  // Use c_str() to convert to C-style string
+void FileSplitter::create_part_file(ofstream& part_file, const string& part_name) {
+    part_file.open(part_name.c_str(), ios::out | ios::binary);  // Use c_str() to convert to C-style string
     if (!part_file) {
-        throw runtime_error("Error opening output file: " + partname);
+        throw runtime_error("Error opening output file: " + part_name);
     }
 }
 
@@ -46,7 +45,7 @@ void FileSplitter::write_part(ofstream& part_file, vector<char>& buffer, int siz
     }
 }
 
-void FileSplitter::split_file(ifstream& operation_file, const string& filename, int parts_size) {
+void FileSplitter::split_file(ifstream& operation_file, const string& file_name, int parts_size) {
     vector<char> buffer(parts_size);
     int parts_index = 0;
 
@@ -59,7 +58,7 @@ void FileSplitter::split_file(ifstream& operation_file, const string& filename, 
         }
 
         stringstream ss;
-        ss << filename << "." << parts_index;
+        ss << file_name << "." << parts_index;
         string partname = ss.str();
 
         ofstream part_file;
@@ -71,21 +70,21 @@ void FileSplitter::split_file(ifstream& operation_file, const string& filename, 
 }
 
 void FileSplitter::split() {
-    cout << "Parts size: " << parts_size << endl;
+    cout << "Parts size: " << partsSize << endl;
 
     ifstream operation_file;
-    open_file(operation_file, filename);
+    open_file(operation_file, fileName);
     int length = get_file_length(operation_file);
-    split_file(operation_file, filename, parts_size);
+    split_file(operation_file, fileName, partsSize);
     operation_file.close();
 }
 
-void FileSplitter::setFilename(const std::string& filename) {
-    this->filename = filename;
+void FileSplitter::setFilename(const std::string& file_name) {
+    this->fileName = file_name;
 }
 
 void FileSplitter::setPartsSize(int size) {
-    this->parts_size = size;
+    this->partsSize = size;
 }
 
 int main2(int argc, char** argv) {

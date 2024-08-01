@@ -1,7 +1,7 @@
 #ifndef UDATA_H
 #define UDATA_H
 
-#pragma once
+// #pragma once
 
 #include <string>
 

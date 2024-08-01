@@ -86,25 +86,3 @@ void FileSplitter::setFilename(const std::string& file_name) {
 void FileSplitter::setPartsSize(int size) {
     this->partsSize = size;
 }
-
-int main2(int argc, char** argv) {
-    try {
-        // Directly pass parameters for testing
-        FileSplitter splitter("test.txt", 1024);  // Example parameters
-        splitter.split();
-    } catch (const invalid_argument& e) {
-        cerr << "Invalid argument: " << e.what() << endl;
-        return 1;
-    } catch (const out_of_range& e) {
-        cerr << "Out of range error: " << e.what() << endl;
-        return 1;
-    } catch (const runtime_error& e) {
-        cerr << "Runtime error: " << e.what() << endl;
-        return 1;
-    } catch (const exception& e) {
-        cerr << "An error occurred: " << e.what() << endl;
-        return 1;
-    }
-
-    return 0;
-}

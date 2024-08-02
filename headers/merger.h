@@ -1,8 +1,6 @@
 #ifndef MERGER_H
 #define MERGER_H
 
-// #pragma once
-
 #include <string>
 #include <vector>
 #include <fstream>

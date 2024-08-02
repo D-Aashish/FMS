@@ -2,9 +2,9 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>  // Include string header
+#include <string>
 
-using namespace std;  // Add this to avoid prefixing std::
+using namespace std;
 
 void UserDetails::input(const string& user,const string& pass) {
     userName = user;

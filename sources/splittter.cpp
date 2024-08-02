@@ -11,7 +11,6 @@ using namespace std;
 
 FileSplitter::FileSplitter(const string& file_name, int size) 
     : fileName(file_name), partsSize(size) {
-    // Constructor body can remain empty or include additional initialization if needed
 }
 
 void FileSplitter::open_file(ifstream& file_ptr, const string& file_name) {

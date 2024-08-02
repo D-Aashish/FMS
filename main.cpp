@@ -62,7 +62,7 @@ void handleFileOperations() {
             cin >> filename;
 
             if (filename.empty()) {
-                cerr << "Error: Filename cannot be empty." << endl;
+                cerr << "Filename cannot be empty." << endl;
                 return;
             }
 
@@ -70,7 +70,7 @@ void handleFileOperations() {
             cin >> partsSize;
 
             if (partsSize <= 0) {
-                cerr << "Error: Part size must be a positive integer." << endl;
+                cerr << "Part size must be a positive integer." << endl;
                 return;
             }
             FileSplitter splitter(filename, partsSize);
@@ -84,7 +84,7 @@ void handleFileOperations() {
             cin >> filename;
 
             if (filename.empty()) {
-                cerr << "Error: Filename cannot be empty." << endl;
+                cerr << "Filename cannot be empty." << endl;
                 return;
             }
 
@@ -92,7 +92,7 @@ void handleFileOperations() {
             cin >> numParts;
 
             if (numParts <= 0) {
-                cerr << "Error: Number of parts must be a positive integer." << endl;
+                cerr << "Number of parts must be a positive integer." << endl;
                 return;
             }
 
